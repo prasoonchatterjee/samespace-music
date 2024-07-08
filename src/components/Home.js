@@ -5,6 +5,7 @@ import Player from './Player';
 import spotifyLogo from '../spotify_logo.png';
 import burgerIcon from '../burgerMenu.svg';
 import crossIcon from '../cross.png';
+import spinIcon from '../spin.svg';
 
 const Home = () => {
   const [songsList, setSongsList] = useState([]);
@@ -92,49 +93,47 @@ const Home = () => {
     setTab(num);
     setSearchSong('');
   };
-  console.log('togglebirger', selectedSong?.accent);
 
-  if (isLoading) return <p>Loading....</p>;
-  else if (error) return <p>something went wrong</p>;
-  // else if(toggleBurger) return (
-  //   <div>
-  //     <header className='bg-green-500 flex items-center'>
-  //     <img src={burgerMenu} className='md:hidden w-8 bg-green-500' onClick={()=>setToggleBurger(!toggleBurger)}/>
-  //       <div className="ml-4" onClick={() => changeTab(1)}>For You</div>
-  //       <div className="ml-4" onClick={() => changeTab(2)}>Top Tracks</div>
-  //     </header>
-  //     {renderSongs()}
-  //     {/* <Player url={selectedSongUrl} selectedSong={selectedSong} className='bg-yellow-500' /> */}
-  //   </div>
-  // )
-  // else if(!toggleBurger) return (
-  //   <div>
-  //     <img src={burgerMenu} className='md:hidden w-8 bg-green-500' onClick={()=>setToggleBurger(!toggleBurger)}/>
-  //     <Player url={selectedSongUrl} selectedSong={selectedSong} className='bg-yellow-500' />
-  //   </div>
-  // )
-  else
+  if (error) return <p>something went wrong</p>;
+  else if (isLoading) {
+    return (
+      <div className='flex justify-center items-center h-screen'>
+        <div>
+          <img src={spinIcon} className='animate-spin' alt="loading spinner" />
+        </div>
+      </div>
+    );
+  } else
     return (
       <main
-        className={`flex text-white h-screen flex-col md:flex-row`}
+        className={`flex text-white h-screen flex-col md:flex-row transition-colors ease-in-out duration-1000`}
         style={{ backgroundColor: selectedSong?.accent }}
       >
         <img
           src={toggleBurger ? crossIcon : burgerIcon}
           className='md:hidden w-10 p-1'
           onClick={() => setToggleBurger(!toggleBurger)}
+          alt="burger or cross icon"
         />
         <div className={` basis-1/6 p-2 hidden md:block `}>
-          <img src={spotifyLogo} className='w-32 ml-4 mt-4' />
+          <img src={spotifyLogo} className='w-32 ml-4 mt-4' alt="spotify logo" />
         </div>
         <div
-          className={` p-6 md:basis-1/3 md:flex md:flex-col md:mt-2 transition delay-1000 duration-1000 ease-in-out ${
-            toggleBurger ? 'translate-x-4px' : 'hidden'
+          className={` p-6 md:basis-1/3 md:flex md:flex-col md:mt-2 ${
+            toggleBurger ? '' : 'hidden'
           }`}
         >
-          <header className='font-bold flex cursor-pointer'>
-            <div onClick={() => changeTab(1)}>For You</div>
-            <div onClick={() => changeTab(2)} className='ml-10'>
+          <header className='font-bold flex cursor-pointer justify-around md:justify-start'>
+            <div
+              onClick={() => changeTab(1)}
+              className='hover:scale-150 transform-all duration-1000'
+            >
+              For You
+            </div>
+            <div
+              onClick={() => changeTab(2)}
+              className='ml-10 hover:scale-150 transform-all duration-1000'
+            >
               Top Tracks
             </div>
           </header>
@@ -144,8 +143,6 @@ const Home = () => {
             value={searchSong}
             onChange={(e) => setSearchSong(e.target.value)}
           />
-          
-
           <div className='mt-6'>{renderSongs()}</div>
         </div>
         <div
